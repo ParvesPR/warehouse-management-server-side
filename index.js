@@ -36,6 +36,14 @@ async function run() {
             const product = await cursor.toArray();
             res.send(product)
         });
+
+        // GET ITEM BY PRODUCT ID
+        app.get('/inventory/:productId' async (req, res) => {
+            const query = {};
+            const cursor = productCollection.find(query);
+            const product = await cursor.toArray();
+            res.send(product);
+        })
     }
 
     finally {
