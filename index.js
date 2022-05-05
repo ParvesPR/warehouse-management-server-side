@@ -4,6 +4,8 @@ const port = process.env.PORT || 5000;
 require('dotenv').config();
 const app = express();
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const res = require("express/lib/response");
+const { query } = require('express');
 
 // MIDDLEWARE
 app.use(cors());
@@ -18,13 +20,29 @@ console.log('Connected to MongoDB')
 async function run() {
     try {
         await client.connect();
-        const productCollection=client.db('warehouse').collection('products')
+        const productCollection = client.db('warehouse').collection('products');
+
+        // GET API LOAD DATA FOR HOME PAGE
+        app.get('/products', async (req, res) => {
+            const query = {};
+            const cursor = productCollection.find(query);
+            const product = await cursor.limit(6).toArray();
+            res.send(product)
+        });
+        // GET API LOAD DATA FOR INVENTORY
+        app.get('/inventory', async (req, res) => {
+            const query = {};
+            const cursor = productCollection.find(query);
+            const product = await cursor.toArray();
+            res.send(product)
+        });
     }
 
     finally {
 
     }
 }
+run().catch(console.dir)
 
 app.get('/', (req, res) => {
     res.send('Warehouse server running')
