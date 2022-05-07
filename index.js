@@ -60,12 +60,32 @@ async function run() {
             };
             const newQuantity = await productCollection.updateOne(filter, updateDoc, option)
             res.send(newQuantity)
-        })
-    }
+        });
+
+        // ADD TO STOCK
+        app.put('/addtostock/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id);
+
+            const currentQuantity = req.body
+            console.log(currentQuantity);
+            const filter = { _id: ObjectId(id) }
+            const option = { upsert: true }
+            const updateDoc = {
+                $set: {
+                    quantity: currentQuantity.currentQuantity
+                }
+            }
+            const result = await productCollection.updateOne(filter, updateDoc, option)
+            res.send(result)
+
+        });
+    })
+}
 
     finally {
 
-    }
+}
 }
 run().catch(console.dir)
 
