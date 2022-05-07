@@ -66,26 +66,30 @@ async function run() {
         app.put('/addtostock/:id', async (req, res) => {
             const id = req.params.id;
             console.log(id);
-
-            const currentQuantity = req.body
+            const currentQuantity = req.body;
             console.log(currentQuantity);
             const filter = { _id: ObjectId(id) }
-            const option = { upsert: true }
+            const option = { upsert: true };
             const updateDoc = {
                 $set: {
-                    quantity: currentQuantity.currentQuantity
+                    quantity: currentQuantity.newQuantity
                 }
-            }
-            const result = await productCollection.updateOne(filter, updateDoc, option)
-            res.send(result)
-
+            };
+            const newQuantity = await productCollection.updateOne(filter, updateDoc, option)
+            res.send(newQuantity)
         });
-    })
-}
+
+        // ADD ITEM
+        app.post('/inventory', async (req, res) => {
+            const newItem = req.body;
+            const result = await serviceCollection.insertOne(newItem);
+            res.send(result)
+        });
+    }
 
     finally {
 
-}
+    }
 }
 run().catch(console.dir)
 
