@@ -87,10 +87,19 @@ async function run() {
             res.send(result)
         });
 
-        // GET ADDED ITEM
-        app.post('/myitems', async (req, res) => {
+        // GET ADDED ITEMS
+        app.get('/myitems', async (req, res) => {
+            const email = req.query.email;
+            const query = {email };
+            const cursor = itemCollection.find(query);
+            const orders = await cursor.toArray();
+            res.send(orders)
+        });
+
+        // CREATE ADDED ITEM
+        app.post('/myitem', async (req, res) => {
             const added = req.body;
-            const result = await orderCollection.insertOne(added);
+            const result = await itemCollection.insertOne(added);
             res.send(result)
         })
 
