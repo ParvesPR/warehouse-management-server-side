@@ -21,6 +21,7 @@ async function run() {
     try {
         await client.connect();
         const productCollection = client.db('warehouse').collection('products');
+        const itemCollection = client.db('warehouse').collection('items');
 
         // GET API LOAD DATA FOR HOME PAGE
         app.get('/products', async (req, res) => {
@@ -79,10 +80,25 @@ async function run() {
             res.send(newQuantity)
         });
 
-        // ADD ITEM
+        // ADD ITEM COLLECTION
         app.post('/inventory', async (req, res) => {
             const newItem = req.body;
-            const result = await serviceCollection.insertOne(newItem);
+            const result = await productCollection.insertOne(newItem);
+            res.send(result)
+        });
+
+        // GET ADDED ITEM
+        app.post('/myitems', async (req, res) => {
+            const added = req.body;
+            const result = await orderCollection.insertOne(added);
+            res.send(result)
+        })
+
+        // DELETE ITEM
+        app.delete('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productCollection.deleteOne(query);
             res.send(result)
         });
     }
