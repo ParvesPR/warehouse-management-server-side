@@ -12,7 +12,7 @@ const { query } = require('express');
 app.use(cors());
 app.use(express.json());
 
-// JWT
+// JSON WEB TOKEN
 function verifyJWT(req, res, next) {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
