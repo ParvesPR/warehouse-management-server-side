@@ -21,7 +21,6 @@ async function run() {
     try {
         await client.connect();
         const productCollection = client.db('warehouse').collection('products');
-        const itemCollection = client.db('warehouse').collection('items');
 
         // GET API LOAD DATA FOR HOME PAGE
         app.get('/products', async (req, res) => {
@@ -90,18 +89,11 @@ async function run() {
         // GET ADDED ITEMS
         app.get('/myitems', async (req, res) => {
             const email = req.query.email;
-            const query = {email };
-            const cursor = itemCollection.find(query);
+            const query = { email: email };
+            const cursor = productCollection.find(query);
             const orders = await cursor.toArray();
             res.send(orders)
         });
-
-        // CREATE ADDED ITEM
-        app.post('/myitem', async (req, res) => {
-            const added = req.body;
-            const result = await itemCollection.insertOne(added);
-            res.send(result)
-        })
 
         // DELETE ITEM
         app.delete('/inventory/:id', async (req, res) => {
